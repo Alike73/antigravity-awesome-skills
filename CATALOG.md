@@ -4,7 +4,6 @@ Generated at: 2026-01-31T22:04:24.651Z
 
 Total skills: 618
 
-
 ## architecture (58)
 
 | Skill | Description | Tags | Triggers |
