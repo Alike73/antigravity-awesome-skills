@@ -152,6 +152,7 @@ async function calculatePoints(userId: string): Promise<number>
 - `tailwind-merge` for class conflicts.
 
 **Tailwind vs SCSS:**
+
 - Tailwind: 95% of cases
 - SCSS: Global themes, complex animations, print
 - Never mix on same element
@@ -175,6 +176,7 @@ async function calculatePoints(userId: string): Promise<number>
 ## 🧠 Problem Solving
 
 **Anticipate needs.** Flag if you see:
+
 - Repeated code → DRY
 - Manual sync → Derive
 - Hard-coded values → Config
