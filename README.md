@@ -1,5 +1,6 @@
 # 🌌 Antigravity Awesome Skills: 625+ Agentic Skills for Claude Code, Gemini CLI, Cursor, Copilot & More
 
+![Banner](./assets/antigravity-banner.png)
 > **The Ultimate Collection of 625+ Universal Agentic Skills for AI Coding Assistants — Claude Code, Gemini CLI, Codex CLI, Antigravity IDE, GitHub Copilot, Cursor, OpenCode**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -25,17 +26,29 @@ This repository provides essential skills to transform your AI assistant into a 
 
 ## Table of Contents
 
-- [🚀 New Here? Start Here!](#new-here-start-here)
-- [🔌 Compatibility & Invocation](#compatibility--invocation)
-- [📦 Features & Categories](#features--categories)
-- [🎁 Curated Collections (Bundles)](#curated-collections)
-- [📚 Browse 625+ Skills](#browse-625-skills)
-- [🛠️ Installation](#installation)
-- [🤝 How to Contribute](#how-to-contribute)
-- [👥 Contributors & Credits](#credits--sources)
-- [⚖️ License](#license)
-- [👥 Repo Contributors](#repo-contributors)
-- [🌟 Star History](#star-history)
+- [🌌 Antigravity Awesome Skills: 625+ Agentic Skills for Claude Code, Gemini CLI, Cursor, Copilot \& More](#-antigravity-awesome-skills-625-agentic-skills-for-claude-code-gemini-cli-cursor-copilot--more)
+  - [Table of Contents](#table-of-contents)
+  - [New Here? Start Here!](#new-here-start-here)
+    - [1. 🐣 Context: What is this?](#1--context-what-is-this)
+    - [2. ⚡️ Quick Start (The "Bundle" Way)](#2-️-quick-start-the-bundle-way)
+    - [3. 🧠 How to use](#3--how-to-use)
+  - [Compatibility \& Invocation](#compatibility--invocation)
+  - [Features \& Categories](#features--categories)
+  - [Curated Collections](#curated-collections)
+  - [Browse 625+ Skills](#browse-625-skills)
+  - [Installation](#installation)
+    - [Option A: npx (recommended)](#option-a-npx-recommended)
+    - [Option B: git clone](#option-b-git-clone)
+  - [How to Contribute](#how-to-contribute)
+  - [Credits \& Sources](#credits--sources)
+    - [Official Sources](#official-sources)
+    - [Community Contributors](#community-contributors)
+    - [Inspirations](#inspirations)
+  - [License](#license)
+  - [Community](#community)
+  - [GitHub Topics](#github-topics)
+  - [Repo Contributors](#repo-contributors)
+  - [Star History](#star-history)
 
 ---
 
