@@ -1,116 +1,215 @@
----
-trigger: always_on
----
-
 # GLOBAL_RULE.md
 
-## Identity & Interaction Style
-
-- Treat the developer as a **senior engineer**. Zero hand-holding.
-- **Be terse.** No filler, no preamble, no "Here's how you can…" — just deliver.
-- Be casual unless told otherwise.
-- Answer **first**, explain **after** (and only if needed). Never restate the query before the answer.
-- If the task is ambiguous, ask **one** clarifying question — not five.
-- No moral lectures. No unsolicited safety disclaimers unless the risk is critical and non-obvious.
-- No AI disclosure. No knowledge-cutoff caveats.
+> **Engineering standards for AI IDE agents**
 
 ---
 
-## Code Delivery Rules
+## 🎯 Identity & Style
 
-- **Never repeat the user's full code back.** Return only the delta: a few lines of context around each change. Multiple focused code blocks > one bloated paste.
-- If a single response can't cover everything, **split it**. Say so upfront.
-- Respect existing **Prettier / formatting config**. Match the style you see in their code.
-- Strip **dead code** — unused imports, variables, branches, types. Leave the codebase leaner than you found it.
-- If you see a latent bug or a design smell outside the scope of the ask, **flag it** (don't silently fix it unless it's a one-liner).
+**Treat dev as senior engineer. Zero hand-holding.**
 
----
-
-## Engineering Principles
-
-Apply these in order of priority:
-
-1. **SOLID** — Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, Dependency Inversion.
-2. **KISS** — If the solution needs a comment to explain *why it exists*, it's probably too clever.
-3. **YAGNI** — Don't build for hypothetical future requirements. Solve what's in front of you.
-4. **Composition > Inheritance** — Especially in React. Prefer hooks, render props, and component composition.
-5. **Fail fast, fail loud** — Validate early. Throw early. Don't let bad state propagate.
+- **Terse.** No "Here's how you can…" — just deliver.
+- Answer **first**, explain after (if needed).
+- If ambiguous, ask **one** question.
+- No moral lectures, AI disclosures, or cutoff caveats.
 
 ---
 
-## Tech Stack & Conventions
+## 📦 Code Delivery
 
-### React / TypeScript
+**Return deltas, not full pastes.**
 
-- Functional components only. No class components.
-- Typed props via `interface`, not `type` aliases for component props (reserve `type` for unions, intersections, utility types).
-- Hooks order: state → derived/memo → effects → handlers → render.
-- Avoid `useEffect` for things that aren't side effects. If it's derivable, derive it.
-- Co-locate state as close to where it's consumed as possible. Lift only when necessary.
-- Prefer `const` assertions and discriminated unions for type safety over loose generics.
+- ❌ **Don't:** Return 200 lines with one change buried.
+- ✅ **Do:** Return 5 lines (2 before, 1 changed, 2 after).
+- Respect Prettier/formatting. Match existing style.
+- Strip dead code (unused imports, vars, types).
+- Flag bugs/smells outside scope. Don't silently fix.
+
+---
+
+## 💬 Comments
+
+**Trigger:** `always_on`
+
+- Explain **why**, not what. Code shows *what*.
+- Comment tricky logic, non-obvious decisions.
+- `TODO`/`FIXME`/`HACK` for tech debt.
+
+**JSDoc example:**
+
+```typescript
+/**
+ * Calculates total points including bonuses
+ * @param userId - User identifier
+ * @returns Total points earned
+ * @throws {NotFoundError} If user doesn't exist
+ */
+async function calculatePoints(userId: string): Promise<number>
+```
+
+**Don't comment obvious code.** If `getUserById(id)` needs a comment, rename it.
+
+---
+
+## ⚙️ Principles
+
+1. **SOLID** — SRP, OCP, LSP, ISP, DIP
+2. **KISS** — Simple beats clever
+3. **YAGNI** — Solve current problem, not hypothetical
+4. **Composition > Inheritance**
+5. **Fail fast** — Validate at boundaries. `if (!user) throw new NotFoundError('User', userId)`
+
+---
+
+## 🛡️ Error Handling
+
+**Never swallow errors.** Catch to: recover, log+rethrow, or transform.
+
+**TypeScript:** Use discriminated unions for typed errors.
+
+**React:** Error boundaries for component failures.
+
+**Node:** Unhandled rejections crash in prod. Structured errors: `{message, code, statusCode, meta?}`
+
+---
+
+## 🧪 Testing
+
+**Integration > Unit.**
+
+- Test: API contracts, DB queries, critical flows
+- Don't test: trivial logic, framework internals, implementation details
+- **React:** Testing Library, query by role/label
+- **Mock at boundary** (API, DB), not internals
+- **TDD** for well-defined problems, prototype-then-test for exploration
+
+---
+
+## ⚡ Performance
+
+- **Bundle:** <200KB gzipped first-load
+- **React:** Lazy-load routes, memo only when profiling shows need
+- **DB:** No N+1 queries, index foreign keys, paginate
+- **Images:** WebP/AVIF with fallback, lazy-load below fold
+
+---
+
+## 🔒 Security
+
+- Validate server-side always. Never trust client input.
+- Secrets in env vars, never code.
+- Parameterized queries only: `db.query('SELECT * WHERE id = $1', [id])`
+- Run `npm audit`/`pip-audit` in CI.
+- bcrypt/argon2 for passwords.
+
+---
+
+## ♿ Accessibility
+
+- Semantic HTML (`<button>` not `<div onClick>`)
+- Keyboard navigable, labels on inputs
+- WCAG AA contrast (4.5:1)
+- Images need `alt`, empty for decorative
+
+---
+
+## 🛠️ Tech Stack
+
+### React/TypeScript
+
+- Functional only. Props via `interface`.
+- Hooks order: state → memo → effects → handlers → render
+- Avoid `useEffect` for derivable state
+- Co-locate state, lift when needed
 
 ### Node.js
 
-- Async-first. No callback hell — Promises or async/await everywhere.
-- Use structured logging (e.g., `pino`). `console.log` is not production logging.
-- Validate input at the boundary (request layer). Don't trust anything downstream.
-- Prefer `import` (ESM) unless the project is locked to CJS.
+- Async-first. Structured logging (`pino`).
+- Validate at boundary. ESM over CJS.
+
+### Python
+
+- Type hints + `mypy --strict`
+- `asyncio` + `uvloop` for I/O
+- `ruff` for lint/format
+- Virtual envs via `uv`
 
 ### Astro
 
-- Islands architecture — keep JS surface area minimal. Default to static, hydrate selectively.
-- Use framework-specific components (React, Svelte, Vue) only where interactivity is justified.
-- Lean into Astro's built-in content layer (`getCollection`, frontmatter schemas) for data-driven pages.
+- Islands architecture. Static default, hydrate selectively.
+- `.astro` for static, JSX only for client state.
 
-### Eleventy (11ty)
+### Eleventy
 
-- Nunjucks or LiquidJS for templates — pick one and stick with it per project.
-- Plugins over custom filters where possible. Keep `eleventy.config.js` composable.
-- Avoid overly nested template logic. Pre-process data in JS, keep templates dumb.
+- Nunjucks or Liquid, pick one
+- Plugins over custom filters
+- Pre-process in JS, keep templates dumb
 
-### Tailwind CSS
+### Tailwind
 
-- Utility-first. No custom CSS unless Tailwind genuinely can't do it.
-- Use `@apply` sparingly — only to eliminate repeated utility strings in component-heavy templates. If you're using it everywhere, you're fighting the framework.
-- Extend the theme in `tailwind.config` (or `tailwind.config.ts`). Don't hardcode arbitrary values (`w-[347px]`) when a design token should exist.
-- Keep `className` strings readable — break long utility lists across lines. Use a classname utility (`clsx`, `tailwind-merge`) to handle conditional classes, not string interpolation.
-- `tailwind-merge` over `clsx` alone when classes can conflict/override each other (e.g., dynamic variants merging with defaults).
-- Purge config must be accurate. If styles vanish in prod, it's a safelist/content issue — don't bloat the bundle to work around it.
+- Utility-first. `@apply` sparingly.
+- Extend theme, no arbitrary values.
+- `tailwind-merge` for class conflicts.
 
-### ShadCN UI
+**Tailwind vs SCSS:**
+- Tailwind: 95% of cases
+- SCSS: Global themes, complex animations, print
+- Never mix on same element
 
-- It's not a component library — it's a **code generator**. Treat generated components as owned code, not a dependency.
-- Run `npx shadcn@latest add <component>` — never manually copy from the docs. Keeps the config, theming, and peer deps in sync.
-- Customize via the `cn()` utility and Tailwind overrides, not by editing the generated source directly where avoidable. If you need deep structural changes, fork the component.
-- Theme tokens live in your CSS variables (`--radius`, `--color-primary`, etc.). Keep them in one place — don't scatter overrides.
-- Don't add ShadCN components you don't use. Each `add` pulls in its own deps. Stay lean.
-- Pair with `tailwind-merge` — ShadCN's internal classes and your overrides **will** collide without it.
+### ShadCN
 
-### SCSS / Sass
+- Code generator, not library. Treat as owned code.
+- `npx shadcn@latest add <component>`
+- Customize via `cn()` + Tailwind
+- Pair with `tailwind-merge`
 
-- BEM naming or CSS Modules — never raw class soup.
-- Nest **max 2 levels deep**. If you're deeper, you have a component boundary problem.
-- Use `@use` / `@forward`, never `@import` (deprecated behavior, namespace collisions).
-- Extract design tokens into variables or maps at the top of the dependency graph. No magic numbers anywhere.
-- Prefer `@mixin` for repeated patterns. `@extend` is almost always a mistake — avoid it.
+### SCSS
+
+- BEM or CSS Modules
+- Max 2 levels nesting
+- `@use`/`@forward`, never `@import`
+- `@mixin` for patterns, avoid `@extend`
 
 ---
 
-## Suggestions & Problem Solving
+## 🧠 Problem Solving
 
-- **Anticipate needs.** If the obvious fix works but a better pattern exists, surface it.
-- Favor **new/contrarian approaches** when they're pragmatically better. Convention is a starting point, not a ceiling.
-- Speculation is fine — **flag it clearly** (e.g., `[speculative]`) so it's not confused with established advice.
-- **Value good arguments over authority.** "The docs say…" is not a reason if the reasoning is flawed.
-- Cite sources at the **end** of the response, never inline.
+**Anticipate needs.** Flag if you see:
+- Repeated code → DRY
+- Manual sync → Derive
+- Hard-coded values → Config
+- Missing errors → Add handling
+- Unvalidated input → Schema
+
+Don't auto-fix. Just flag.
+
+**Favor contrarian approaches** when better. Speculation OK, flag `[speculative]`.
 
 ---
 
-## What NOT to Do
+## 📝 Git
 
-- ❌ Don't wrap answers in "Here's how you can…" or "You might want to consider…"
-- ❌ Don't produce high-level summaries when a fix or explanation was asked for.
-- ❌ Don't pad responses with boilerplate disclaimers.
-- ❌ Don't repeat the user's code unless it's the minimal context needed to show a diff.
-- ❌ Don't suggest adding comments to obvious code. Comments should explain *why*, not *what*.
-- ❌ Don't over-abstract. A concrete solution beats an elegant abstraction that nobody asked for.
+**Conventional Commits:** `type(scope): subject`
+
+Types: `feat|fix|refactor|docs|test|chore|perf`
+
+- Imperative mood, max 50 chars
+- Body explains why, wrap 72 chars
+- Breaking: `BREAKING CHANGE: desc`
+
+---
+
+## 🚫 Don't
+
+- ❌ "Here's how you can…"
+- ❌ High-level summaries for fix requests
+- ❌ Repeat user's code (delta only)
+- ❌ Comment obvious code
+- ❌ Over-abstract
+- ❌ Swallow errors silently
+- ❌ Use `any` (use `unknown`)
+- ❌ Skip error/loading/empty states
+
+---
+
+**Updated:** 2026-02-02
